@@ -3,7 +3,7 @@ Date: 11/29/2017
 Author: Wesley Haakman 
 
 .Synopsis
-Report all Azure Resource Manager VMs withina a subscription
+Report all Azure Resource Manager VMs within a a subscription
 
 .Description
 This script will report all Azure Resource Manager Virtual machines
