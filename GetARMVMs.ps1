@@ -1,9 +1,10 @@
-﻿<#
+<#
 Date: 11/29/2017
 Author: Wesley Haakman 
-.Synopsis
 
+.Synopsis
 Report all Azure Resource Manager VMs withina a subscription
+
 .Description
 This script will report all Azure Resource Manager Virtual machines
 Within a subscription and output the file to a table including the following information:
@@ -28,7 +29,6 @@ $outputPath = "c:\temp\vms.html"
 # Get VMs
 $vms = Get-AzureRmVM
 
-
 $vmarray =@()
     foreach ($vm in $vms) 
     {     
@@ -47,7 +47,7 @@ $vmarray =@()
         $pip = ($publicips |where {$_.id -eq $publicIpId}).IpAddress
 
         $VNetworkSubnetID=$vmNetworkInterface.IpConfigurations.subnet.id
-        #$VirtualNetwork=Get-AzureRMVirtualNetwork | Where { $_.Subnets.ID –match $VnetworkSubnetID }
+        # Get Virtual network and Subnet name from net subnet ID string
         $vmVNet = $VNetworkSubnetID.split("/")[8]
         $vmSubnet = $VNetworkSubnetID.split("/")[10]
         
