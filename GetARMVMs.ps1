@@ -34,8 +34,9 @@ $vmarray =@()
 foreach ($vm in $vms) 
     {     
       
+        # Retrieve VM Status
         $vmstatus = Get-AzurermVM -Name $vm.Name -ResourceGroupName $vm.ResourceGroupName -Status  
-
+      
         # Match private IP to VM
         $networkInterfaceID = $vm.NetworkProfile.NetworkInterfaces.id
         $networkInterfaces = Get-AzureRmNetworkInterface
@@ -56,12 +57,13 @@ foreach ($vm in $vms)
         $vmarray += New-Object PSObject -Property @{
              
             Name=$vm.Name 
+            ResourceGroup=$vm.resourceGroupName
             PowerState=(get-culture).TextInfo.ToTitleCase(($vmstatus.statuses)[1].code.split("/")[1]) 
             Location=$vm.Location 
             PrivateIP=$vmPrivateIP
             PublicIP=$pip 
-            VNet = $vmVNet
-            Subnet = $vmSubnet
+            VNet=$vmVNet
+            Subnet=$vmSubnet
             Size=$vm.HardwareProfile.VmSize
        } 
     }
@@ -85,7 +87,7 @@ $beginning = {
     </head>
     <h1>Azure Resource Manager VM Report</h1>
     <table>
-    <tr><th>VM Name</th><th>VM Location</th><th>Power State</th><th>Private IP Address</th><th>Public IP Address</th><th>Virtual Network</th><th>Subnet</th><th>Size</th></tr>
+    <tr><th>VM Name</th><th>VM Resource Group</th><th>VM Location</th><th>Power State</th><th>Private IP Address</th><th>Public IP Address</th><th>Virtual Network</th><th>Subnet</th><th>Size</th></tr>
 '@
 }
 #Mapping between Property and table
@@ -95,6 +97,7 @@ $beginning = {
 
         '<tr>'
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.Name
+        '<td bgcolor="#FFFFFF">{0}</td>' -f $_.ResourceGroup
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.Location
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.PowerState
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.PrivateIP
