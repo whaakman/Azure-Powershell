@@ -4,7 +4,7 @@ Author: Wesley Haakman
 URL: https://github.com/whaakman/Azure-Powershell
 
 .Synopsis
-Report all Azure Resource Manager VMs withina a subscription
+Report all Azure Resource Manager VMs within a subscription
 
 .Description
 This script will report all Azure Resource Manager Virtual machines
