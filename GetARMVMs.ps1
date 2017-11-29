@@ -25,8 +25,10 @@ Usage: Login-AzureRMAccount before executing the script
 
 #>
 
+$DateTime=Get-Date -UFormat "%Y%m%d"
+
 # CHANGE THIS
-$outputPath = "c:\temp\vms.html"
+$outputPath = "c:\temp\vms-" + $datetime + ".html"
 
 # Get VMs
 $vms = Get-AzureRmVM
