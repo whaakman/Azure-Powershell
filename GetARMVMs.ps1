@@ -3,15 +3,17 @@ Date: 11/29/2017
 Author: Wesley Haakman 
 
 .Synopsis
-Report all Azure Resource Manager VMs within a a subscription
+Report all Azure Resource Manager VMs withina a subscription
 
 .Description
 This script will report all Azure Resource Manager Virtual machines
 Within a subscription and output the file to a table including the following information:
 - Virtual Machine Name;
+- Resource Group;
 - Virtual Machine Location;
 - Power State;
 - Private IP Address;
+- Allocation Method of the Private IP address;
 - Public IP Address;
 - Virtual Network;
 - Subnet;
@@ -42,10 +44,12 @@ foreach ($vm in $vms)
         $networkInterfaces = Get-AzureRmNetworkInterface
         $vmNetworkInterface = $networkInterfaces |where {$_.Id -eq $networkInterfaceID}
         $vmPrivateIP = $vmNetworkInterface.IpConfigurations.PrivateIpAddress
+        $privateIPAllocation = $vmNetworkInterface.IpConfigurations.PrivateIPAllocationMethod
 
         # Match public IP to VM
         $publicips = Get-AzureRmPublicIpAddress
-        $publicIpId = ($networkInterfaces |where {$_.Id -eq $networkInterfaceID}).IpConfigurations.PublicIpAddress.id
+        $publicip = $networkInterfaces |where {$_.Id -eq $networkInterfaceID}
+        $publicIpId = $publicip.IpConfigurations.PublicIpAddress.id
         $pip = ($publicips |where {$_.id -eq $publicIpId}).IpAddress
 
         $VNetworkSubnetID=$vmNetworkInterface.IpConfigurations.subnet.id
@@ -64,6 +68,7 @@ foreach ($vm in $vms)
             PublicIP=$pip 
             VNet=$vmVNet
             Subnet=$vmSubnet
+            privIPAllocationMethod=$privateIPAllocation
             Size=$vm.HardwareProfile.VmSize
        } 
     }
@@ -87,7 +92,7 @@ $beginning = {
     </head>
     <h1>Azure Resource Manager VM Report</h1>
     <table>
-    <tr><th>VM Name</th><th>VM Resource Group</th><th>VM Location</th><th>Power State</th><th>Private IP Address</th><th>Public IP Address</th><th>Virtual Network</th><th>Subnet</th><th>Size</th></tr>
+    <tr><th>VM Name</th><th>VM Resource Group</th><th>VM Location</th><th>Power State</th><th>Private IP Address</th><th>Priv Ip Allocation</th><th>Public IP Address</th><th>Virtual Network</th><th>Subnet</th><th>Size</th></tr>
 '@
 }
 #Mapping between Property and table
@@ -101,6 +106,7 @@ $beginning = {
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.Location
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.PowerState
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.PrivateIP
+        '<td bgcolor="#FFFFFF">{0}</td>' -f $_.PrivIPAllocationMethod
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.PublicIP
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.VNet
         '<td bgcolor="#FFFFFF">{0}</td>' -f $_.Subnet
