@@ -30,7 +30,8 @@ $outputPath = "c:\temp\vms.html"
 $vms = Get-AzureRmVM
 
 $vmarray =@()
-    foreach ($vm in $vms) 
+
+foreach ($vm in $vms) 
     {     
       
         $vmstatus = Get-AzurermVM -Name $vm.Name -ResourceGroupName $vm.ResourceGroupName -Status  
@@ -62,11 +63,9 @@ $vmarray =@()
             VNet = $vmVNet
             Subnet = $vmSubnet
             Size=$vm.HardwareProfile.VmSize
-            } 
+       } 
     }
  
-
-
 $beginning = { 
 #HTML format for the table
  @'
